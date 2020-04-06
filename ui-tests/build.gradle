@@ -1,0 +1,81 @@
+import java.nio.charset.StandardCharsets
+
+ext {
+    allureVersion = '2.7.0'
+    webDriverVersion = '3.7.0'
+    selenideVersion = '5.10.0'
+    testngVersion = '6.14.3'
+    log4jVersion = '1.2.17'
+    slf4jVersion = '1.7.25'
+    assertjVersion = '3.11.0'
+    encoding = StandardCharsets.UTF_8.toString()
+}
+
+//compile -> implementation
+//testCompile -> testImplementation
+
+dependencies {
+
+    // https://mvnrepository.com/artifact/io.qameta.allure/allure-testng
+    implementation group: 'io.qameta.allure', name: 'allure-testng', version: allureVersion
+
+    // https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager
+    implementation group: 'io.github.bonigarcia', name: 'webdrivermanager', version: webDriverVersion
+
+    // https://mvnrepository.com/artifact/com.codeborne/selenide
+    implementation group: 'com.codeborne', name: 'selenide', version: selenideVersion
+
+    // https://mvnrepository.com/artifact/org.testng/testng
+    implementation group: 'org.testng', name: 'testng', version: testngVersion
+
+    // https://mvnrepository.com/artifact/log4j/log4j
+    implementation group: 'log4j', name: 'log4j', version: log4jVersion
+
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
+
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12
+    testImplementation group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jVersion
+
+    // https://mvnrepository.com/artifact/org.assertj/assertj-core
+    implementation group: 'org.assertj', name: 'assertj-core', version: assertjVersion
+
+}
+//Run tests with testNG
+//Change test runner in settings idea on gradle and it will work
+allure {
+    version = "$allureVersion"
+    aspectjweaver = true
+    configuration = 'implementation' //to be seen @Step on allure
+    useTestNG() {
+        version = "$allureVersion"
+    }
+}
+
+test {
+    useTestNG(){
+        dependsOn cleanTest
+        useDefaultListeners = true
+        options.suites("src/test/resources/suite.xml")
+        testLogging {
+            events "PASSED", "SKIPPED", "FAILED"
+            exceptionFormat = 'full'
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.fork = true
+    options.incremental = true
+    options.encoding = encoding
+}
+
+task generateAllureReport() {
+    dependsOn 'allureReport'
+}
+test.finalizedBy(generateAllureReport)
+
+task openAllureReport() {
+    dependsOn 'allureServe'
+}
+//test.finalizedBy(openAllureReport)

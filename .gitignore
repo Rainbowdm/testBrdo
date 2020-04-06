@@ -1,0 +1,30 @@
+### Java template
+# Compiled class file
+*.class
+
+ui-tests/build
+ui-tests/log
+ui-tests/screenshots
+ui-tests/screenshots/out
+.allure
+.gradlew
+.gradle
+!gradle/wrapper
+.idea
+.idea/*
+.idea/libraries
+.idea/workspace.xml
+*.iml
+*.ipr
+*.iws
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/

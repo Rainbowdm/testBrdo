@@ -1,0 +1,3 @@
+rootProject.name = 'inspections.staging.brdo'
+include 'ui-tests'
+
